@@ -2,6 +2,8 @@ package net.spacetivity.world.commands;
 
 import net.spacetivity.world.SpaceWorldManager;
 import net.spacetivity.world.generation.WorldTemplate;
+import net.spacetivity.world.message.Message;
+import net.spacetivity.world.message.MessageUtil;
 import net.spacetivity.world.password.PasswordContainer;
 import net.spacetivity.world.permission.PermissionChecker;
 import net.spacetivity.world.settings.WorldSettings;
@@ -406,20 +408,20 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
     }
 
     private void sendUsage(Player player) {
-        player.sendMessage(SpaceWorldManager.PREFIX + "All available commands:");
-        player.sendMessage("§f- §7/nwm create <Worldname> <Template> [Password]");
-        player.sendMessage("§f- §7/nwm delete <Worldname> [Password]");
-        player.sendMessage("§f- §7/nwm import <Worldname> [Password]");
-        player.sendMessage("§f- §7/nwm join <Worldname> [Password]");
-        player.sendMessage("§f- §7/nwm lock <WorldName> <Password>");
-        player.sendMessage("§f- §7/nwm unlock <Worldname> [Password]");
-        player.sendMessage("§f- §7/nwm trust <Player> <Worldname>");
-        player.sendMessage("§f- §7/nwm untrust <Player> <Worldname>");
-        player.sendMessage("§f- §7/nwm list <Page>");
-        player.sendMessage("§f- §7/nwm list");
-        player.sendMessage("§f- §7/nwm templates");
-        player.sendMessage("§f- §7/nwm info");
-        player.sendMessage("§f- §7/nwm gui");
+        MessageUtil.send(player,"world.command.usage.title");
+        MessageUtil.send(player,"world.command.usage.prefix","swm create <Worldname> <Template> [Password]");
+        MessageUtil.send(player,"world.command.usage.prefix","swm delete <Worldname> [Password]");
+        MessageUtil.send(player,"world.command.usage.prefix","swm import <Worldname> [Password]");
+        MessageUtil.send(player,"world.command.usage.prefix","swm join <Worldname> [Password]");
+        MessageUtil.send(player,"world.command.usage.prefix","swm lock <WorldName> <Password>");
+        MessageUtil.send(player,"world.command.usage.prefix","swm unlock <Worldname> [Password]");
+        MessageUtil.send(player,"world.command.usage.prefix","swm trust <Player> <Worldname>");
+        MessageUtil.send(player,"world.command.usage.prefix","swm untrust <Player> <Worldname>");
+        MessageUtil.send(player,"world.command.usage.prefix","swm list <Page>");
+        MessageUtil.send(player,"world.command.usage.prefix","swm list");
+        MessageUtil.send(player,"world.command.usage.prefix","swm templates");
+        MessageUtil.send(player,"world.command.usage.prefix","swm info");
+        MessageUtil.send(player,"world.command.usage.prefix","swm gui");
     }
 
     @Nullable
@@ -447,7 +449,7 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
 
         TextComponent firstSubComponent = new TextComponent();
         firstSubComponent.setText("§f§lHERE ");
-        firstSubComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/awm join " + newWorld.getName()));
+        firstSubComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/swm join " + newWorld.getName()));
         mainComponent.addExtra(firstSubComponent);
 
         TextComponent secondSubComponent = new TextComponent();

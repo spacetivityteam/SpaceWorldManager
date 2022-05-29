@@ -35,7 +35,7 @@ public record WorldProtectionListener(WorldSettingsFileManager worldSettingsFile
         String forceGameMode = worldSettingsFileManager.getWorldSettings(player.getWorld().getName()).getForceGameMode();
         player.setGameMode(GameMode.valueOf(forceGameMode));
 
-        MessageUtil.sendReplaced(player, "messages.join.world", player.getWorld().getName());
+        MessageUtil.send(player, "messages.join.world", player.getWorld().getName());
 
         if (SpaceWorldManager.getInstance().getConfigurationFileManager().getConfig().isShowScoreboard())
             SpaceWorldManager.getInstance().getSidebarManager().getSidebar(player.getUniqueId()).ifPresent(Sidebar::update);

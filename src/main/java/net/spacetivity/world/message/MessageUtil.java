@@ -31,6 +31,13 @@ public class MessageUtil {
         });
     }
 
+    public static void send(Player player, String key, String append, Object... toReplace) {
+        validateMessage(player, key, message -> {
+            String text = message.getText().replace("%PREFIX%", prefix());
+            sendToPlayer(player, MessageFormat.format(text, toReplace) + append, message.getType());
+        });
+    }
+
     private static void validateMessage(Player requester, String key, Consumer<Message> result) {
         Optional<Message> optionalMessage = get(key);
 
@@ -50,4 +57,5 @@ public class MessageUtil {
     private static void sendToPlayer(Player player, String message, String type) {
         player.spigot().sendMessage(ChatMessageType.valueOf(type), new TextComponent(message));
     }
+
 }

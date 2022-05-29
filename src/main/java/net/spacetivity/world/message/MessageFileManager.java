@@ -40,9 +40,10 @@ public class MessageFileManager {
     private List<Message> getDefaultMessage() {
         List<Message> messages = new ArrayList<>();
 
-        messages.add(Message.prefix("§3NWM §7|"));
-        messages.add(Message.of("message.test", "This is a test message", ChatMessageType.ACTION_BAR, true, true));
-        messages.add(Message.of("message.test2", "This is a second test message", ChatMessageType.CHAT, true, true));
+        messages.add(Message.prefix("§3SWM §7|"));
+        messages.add(Message.of("world.command.usage.title", "All available commands:", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("world.command.usage.prefix", "§f- §7/", ChatMessageType.CHAT, false, true));
+
         messages.add(Message.of("messages.join.world", "§7Entered world §f{0}§7.", ChatMessageType.CHAT, true, true));
 
         return messages;
