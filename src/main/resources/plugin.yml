@@ -1,9 +1,9 @@
-name: NeptunsWorldManager
+name: SpaceWorldManager
 version: '${version}'
 main: net.spacetivity.world.SpaceWorldManager
 api-version: 1.18
 prefix: NWM
-authors: [ TGamings ]
+authors: [ TGamings, FallenBreak ]
 description: A plugin to generate and manage minecraft worlds, developed by TGamings.
 commands:
   swm:
