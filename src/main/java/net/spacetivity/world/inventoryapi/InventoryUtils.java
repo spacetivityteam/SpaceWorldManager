@@ -11,6 +11,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class InventoryUtils {
@@ -61,18 +62,31 @@ public class InventoryUtils {
                 event -> inventory.open(player, pagination.next().getPage()));
     }
 
-    public static void updateClickedItem(ItemStack itemToUpdate, boolean newValue) {
+    public static void updateClickedGameRuleItem(ItemStack itemToUpdate, Object newValue, Class<?> clazz) {
         if (itemToUpdate.getItemMeta() == null) return;
         if (itemToUpdate.getItemMeta().getLore() == null) return;
         if (itemToUpdate.getItemMeta().getLore().isEmpty()) return;
 
         ItemMeta itemMeta = itemToUpdate.getItemMeta();
-        itemMeta.setLore(generateLore(newValue));
+        List<String> lore = new ArrayList<>();
+
+        lore.add("§7Value: §f" + newValue);
+        lore.add(" ");
+
+        if (clazz.equals(Integer.class)) {
+            lore.add("§8Left-click | +1");
+            lore.add("§8Right-click | -1");
+        } else {
+            lore.add("§8Click to update");
+        }
+
+        itemMeta.setLore(lore);
+
         itemToUpdate.setItemMeta(itemMeta);
     }
 
-    public static List<String> generateLore(boolean value) {
-        return List.of("§8Status: " + (value ? "§aon" : "§coff"));
+    public static List<String> generateLore(Object value) {
+        return List.of("§7Value: §f" + value);
     }
 
     public static List<String> generateLoreAsStrings(boolean value) {

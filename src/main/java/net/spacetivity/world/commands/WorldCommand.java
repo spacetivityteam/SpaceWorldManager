@@ -1,8 +1,10 @@
 package net.spacetivity.world.commands;
 
+import net.md_5.bungee.api.chat.ClickEvent;
+import net.md_5.bungee.api.chat.TextComponent;
 import net.spacetivity.world.SpaceWorldManager;
 import net.spacetivity.world.generation.WorldTemplate;
-import net.spacetivity.world.message.Message;
+import net.spacetivity.world.inventory.WorldInventory;
 import net.spacetivity.world.message.MessageUtil;
 import net.spacetivity.world.password.PasswordContainer;
 import net.spacetivity.world.permission.PermissionChecker;
@@ -10,8 +12,6 @@ import net.spacetivity.world.settings.WorldSettings;
 import net.spacetivity.world.settings.WorldSettingsFileManager;
 import net.spacetivity.world.utils.PageConverter;
 import net.spacetivity.world.utils.WorldUtils;
-import net.md_5.bungee.api.chat.ClickEvent;
-import net.md_5.bungee.api.chat.TextComponent;
 import org.apache.commons.io.FileUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.Chunk;
@@ -54,6 +54,11 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args.length == 1) {
+            if (args[0].equalsIgnoreCase("gui")) {
+                WorldInventory.getInventory(player).open(player);
+                return true;
+            }
+
             if (args[0].equalsIgnoreCase("templates")) {
 
                 if (!PermissionChecker.hasPermission(player, "awm.command.templates")) {
@@ -409,19 +414,19 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
 
     private void sendUsage(Player player) {
         MessageUtil.send(player,"world.command.usage.title");
-        MessageUtil.send(player,"world.command.usage.prefix","swm create <Worldname> <Template> [Password]");
-        MessageUtil.send(player,"world.command.usage.prefix","swm delete <Worldname> [Password]");
-        MessageUtil.send(player,"world.command.usage.prefix","swm import <Worldname> [Password]");
-        MessageUtil.send(player,"world.command.usage.prefix","swm join <Worldname> [Password]");
-        MessageUtil.send(player,"world.command.usage.prefix","swm lock <WorldName> <Password>");
-        MessageUtil.send(player,"world.command.usage.prefix","swm unlock <Worldname> [Password]");
-        MessageUtil.send(player,"world.command.usage.prefix","swm trust <Player> <Worldname>");
-        MessageUtil.send(player,"world.command.usage.prefix","swm untrust <Player> <Worldname>");
-        MessageUtil.send(player,"world.command.usage.prefix","swm list <Page>");
-        MessageUtil.send(player,"world.command.usage.prefix","swm list");
-        MessageUtil.send(player,"world.command.usage.prefix","swm templates");
-        MessageUtil.send(player,"world.command.usage.prefix","swm info");
-        MessageUtil.send(player,"world.command.usage.prefix","swm gui");
+        MessageUtil.sendAndAppend(player,"world.command.usage.prefix","swm create <Worldname> <Template> [Password]");
+        MessageUtil.sendAndAppend(player,"world.command.usage.prefix","swm delete <Worldname> [Password]");
+        MessageUtil.sendAndAppend(player,"world.command.usage.prefix","swm import <Worldname> [Password]");
+        MessageUtil.sendAndAppend(player,"world.command.usage.prefix","swm join <Worldname> [Password]");
+        MessageUtil.sendAndAppend(player,"world.command.usage.prefix","swm lock <WorldName> <Password>");
+        MessageUtil.sendAndAppend(player,"world.command.usage.prefix","swm unlock <Worldname> [Password]");
+        MessageUtil.sendAndAppend(player,"world.command.usage.prefix","swm trust <Player> <Worldname>");
+        MessageUtil.sendAndAppend(player,"world.command.usage.prefix","swm untrust <Player> <Worldname>");
+        MessageUtil.sendAndAppend(player,"world.command.usage.prefix","swm list <Page>");
+        MessageUtil.sendAndAppend(player,"world.command.usage.prefix","swm list");
+        MessageUtil.sendAndAppend(player,"world.command.usage.prefix","swm templates");
+        MessageUtil.sendAndAppend(player,"world.command.usage.prefix","swm info");
+        MessageUtil.sendAndAppend(player,"world.command.usage.prefix","swm gui");
     }
 
     @Nullable

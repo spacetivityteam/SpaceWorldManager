@@ -31,7 +31,7 @@ public class MessageUtil {
         });
     }
 
-    public static void send(Player player, String key, String append, Object... toReplace) {
+    public static void sendAndAppend(Player player, String key, String append, Object... toReplace) {
         validateMessage(player, key, message -> {
             String text = message.getText().replace("%PREFIX%", prefix());
             sendToPlayer(player, MessageFormat.format(text, toReplace) + append, message.getType());
@@ -47,10 +47,7 @@ public class MessageUtil {
         }
 
         Message message = optionalMessage.get();
-
-        if (!message.isActive())
-            return;
-
+        if (!message.isActive()) return;
         result.accept(message);
     }
 

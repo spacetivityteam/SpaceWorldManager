@@ -28,6 +28,24 @@ public class ItemBuilder {
     protected ItemStack itemStack;
     private ItemMeta itemMeta;
 
+    public static ItemStack placeHolder(Material material) {
+        return new ItemBuilder(material).setDisplayName(" ").build();
+    }
+
+    public static ItemStack of(Material material, String displayName) {
+        return new ItemBuilder(material).setDisplayName(displayName).build();
+    }
+
+    public static ItemBuilder builder(Material material, String displayName) {
+        return new ItemBuilder(material).setDisplayName(displayName);
+    }
+
+    public static ItemBuilder skull(String displayName, String value) {
+        return new SkullBuilder()
+                .setOwnerWithGameProfile(value)
+                .setDisplayName(displayName);
+    }
+
     public ItemBuilder(ItemStack itemStack) {
         this.itemStack = new ItemStack(itemStack);
         this.itemMeta = itemStack.getItemMeta();
