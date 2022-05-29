@@ -57,7 +57,6 @@ public class WorldGameRuleInventory implements InventoryProvider {
                 pagination.addToIterator(contents.newIterator(SlotIterator.Type.HORIZONTAL, 1, 0));
             }
 
-            // TODO: update that
             InventoryUtils.loadNavigators(SlotPos.of(0, 1), SlotPos.of(0, 7), player, getInventory(player, world), pagination);
         });
     }
