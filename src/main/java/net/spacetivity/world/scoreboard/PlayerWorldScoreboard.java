@@ -30,6 +30,7 @@ public class PlayerWorldScoreboard extends Sidebar {
     @Override
     public void update() {
         setLine(7, "§f" + worldUtils.isWorldLocked(player.getWorld().getName()));
+        setLine(4, "§f" + worldUtils.getSettings(player.getWorld().getName()).getState().getName());
         setLine(1, "§f" + player.getWorld().getName());
     }
 }

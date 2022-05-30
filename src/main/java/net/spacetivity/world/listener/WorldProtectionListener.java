@@ -7,6 +7,7 @@ import net.spacetivity.world.scoreboard.PlayerWorldScoreboard;
 import net.spacetivity.world.scoreboardapi.Sidebar;
 import net.spacetivity.world.settings.WorldSettingsFileManager;
 import org.bukkit.GameMode;
+import org.bukkit.Material;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -16,6 +17,7 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.inventory.ItemStack;
 
 public record WorldProtectionListener(WorldSettingsFileManager worldSettingsFileManager) implements Listener {
@@ -24,7 +26,6 @@ public record WorldProtectionListener(WorldSettingsFileManager worldSettingsFile
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         ConfigurationData config = SpaceWorldManager.getInstance().getConfigurationFileManager().getConfig();
-
         ItemStack worldItem = SpaceWorldManager.getInstance().giveWorldItem(player);
 
         if (config.isGiveWorldItemOnJoin() && !player.getInventory().contains(worldItem.getType()))
@@ -35,6 +36,16 @@ public record WorldProtectionListener(WorldSettingsFileManager worldSettingsFile
             scoreboard.initSidebar();
             SpaceWorldManager.getInstance().getSidebarManager().setSidebar(player, scoreboard);
         }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
+    public void onQuit(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        ConfigurationData config = SpaceWorldManager.getInstance().getConfigurationFileManager().getConfig();
+        Material material = Material.valueOf(config.getWorldItemMaterial());
+
+        if (player.getInventory().contains(material))
+            player.getInventory().remove(material);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

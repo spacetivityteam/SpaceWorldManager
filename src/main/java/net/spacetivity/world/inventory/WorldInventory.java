@@ -73,7 +73,8 @@ public class WorldInventory implements InventoryProvider {
 
     public void getDisplayItem(World world, Consumer<ItemBuilder> result) {
         String creator = worldUtils.getCreator(world.getName());
-        ItemBuilder itemBuilder = ItemBuilder.builder(Material.WRITABLE_BOOK, "§b§l" + world.getName())
+        ItemBuilder itemBuilder = ItemBuilder.skull("§b§l" + world.getName(), "eyJ0ZXh0dXJlcyI6eyJTS0lOIjp7InVybCI6Imh0dHA6Ly90ZXh0dXJlcy5taW5lY3JhZnQ" +
+                        "ubmV0L3RleHR1cmUvYzY5MTk2YjMzMGM2Yjg5NjJmMjNhZDU2MjdmYjZlY2NlNDcyZWFmNWM5ZDQ0Zjc5MWY2NzA5YzdkMGY0ZGVjZSJ9fX0=")
                 .setLores(List.of("§8Click for more options", "§8Created by §7" + (creator == null ? "Server" : creator)))
                 .addItemFlag(ItemFlag.HIDE_ATTRIBUTES);
 

@@ -1,20 +1,29 @@
 package net.spacetivity.world.inventory;
 
 import lombok.AllArgsConstructor;
+import net.spacetivity.world.SpaceWorldManager;
 import net.spacetivity.world.inventoryapi.ClickableItem;
 import net.spacetivity.world.inventoryapi.InventoryUtils;
 import net.spacetivity.world.inventoryapi.SmartInventory;
 import net.spacetivity.world.inventoryapi.content.InventoryContents;
 import net.spacetivity.world.inventoryapi.content.InventoryProvider;
 import net.spacetivity.world.inventoryapi.content.SlotPos;
+import net.spacetivity.world.utils.WorldUtils;
 import net.spacetivity.world.utils.item.ItemBuilder;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.World;
 import org.bukkit.entity.Player;
-import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
+
+import java.util.List;
+import java.util.Objects;
 
 @AllArgsConstructor
 public class WorldOptionsInventory implements InventoryProvider {
+
+    private final WorldUtils worldUtils = SpaceWorldManager.getInstance().getWorldUtils();
 
     private Player player;
     private World world;
@@ -32,16 +41,54 @@ public class WorldOptionsInventory implements InventoryProvider {
         setPlaceholders(contents);
         InventoryUtils.backToMainPageItem(contents, SlotPos.of(0, 4), player, WorldInventory.getInventory(player));
 
-        contents.set(1, 0, ClickableItem.empty(ItemBuilder.builder(Material.COMPASS, "§b§lSpawnpoint").build()));
-        contents.set(1, 1, ClickableItem.empty(ItemBuilder.builder(Material.CLOCK, "§b§lTime").build()));
+        Location spawnLocation = world.getSpawnLocation();
+
+        ItemStack spawnItem = ItemBuilder.builder(Material.COMPASS, "§b§lSpawnpoint")
+                .setLores(List.of(
+                        "§7X: §f" + spawnLocation.getX(),
+                        "§7Y: §f" + spawnLocation.getYaw(),
+                        "§7Z: §f" + spawnLocation.getZ(),
+                        "§8Click to update"
+                ))
+                .build();
+
+        contents.set(1, 0, ClickableItem.of(spawnItem, event -> {
+            if (!player.getWorld().getName().equalsIgnoreCase(world.getName())) {
+                player.sendMessage(SpaceWorldManager.PREFIX + "§cYou have to be in that world to update its spawnpoint.");
+                return;
+            }
+
+            world.setSpawnLocation(player.getLocation());
+            player.sendMessage(SpaceWorldManager.PREFIX + "§7World-spawn for world §f" + world.getName() + " §7updated.");
+            InventoryUtils.updateClickedSpawnItem(Objects.requireNonNull(event.getCurrentItem()), world);
+            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
+        }));
+
+        contents.set(1, 1, ClickableItem.of(ItemBuilder.builder(Material.CLOCK, "§b§lTime").build(), event ->
+                WorldTimeInventory.getInventory(player, world).open(player)));
 
         contents.set(1, 2, ClickableItem.of(ItemBuilder.builder(Material.NAME_TAG, "§b§lGamerules").build(), event ->
                 WorldGameRuleInventory.getInventory(player, world).open(player)));
 
-        contents.set(1, 3, ClickableItem.empty(ItemBuilder.builder(Material.IRON_SWORD, "§b§lPVP").addItemFlag(ItemFlag.HIDE_ATTRIBUTES).build()));
 
-        contents.set(1, 7, ClickableItem.empty(ItemBuilder.builder(Material.PLAYER_HEAD, "§b§lTrusted players").build()));
-        contents.set(1, 8, ClickableItem.empty(ItemBuilder.builder(Material.COMPARATOR, "§b§lStatus").build()));
+        contents.set(1, 3, ClickableItem.of(ItemBuilder.builder(Material.ENDER_PEARL, "§b§lJoin World").build(), event -> {
+            player.closeInventory();
+            player.performCommand("swm join " + world.getName());
+            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
+        }));
+
+        contents.set(1, 4, ClickableItem.of(ItemBuilder.builder(Material.PLAYER_HEAD, "§b§lTrusted players").build(), event ->
+                TrustedPlayerInventory.getInventory(player, world).open(player)));
+
+        ItemStack stateItem = ItemBuilder.builder(Material.COMPARATOR, "§b§lStatus")
+                .setLores(List.of("§7" + worldUtils.getState(world.getName()).getName(), "§8" + worldUtils.getOtherState(world.getName()).getName()))
+                .build();
+
+        contents.set(1, 8, ClickableItem.of(stateItem, event -> {
+            worldUtils.updateStatus(world.getName());
+            InventoryUtils.updateClickedStateItem(Objects.requireNonNull(event.getCurrentItem()), world);
+            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
+        }));
     }
 
     private void setPlaceholders(InventoryContents contents) {

@@ -2,14 +2,16 @@ package net.spacetivity.world.utils;
 
 import com.google.common.cache.Cache;
 import com.google.common.cache.CacheBuilder;
-import net.spacetivity.world.password.HashingManager;
-import net.spacetivity.world.password.PasswordContainer;
-import net.spacetivity.world.settings.WorldSettings;
-import net.spacetivity.world.settings.WorldSettingsFileManager;
 import lombok.SneakyThrows;
 import net.spacetivity.world.SpaceWorldManager;
 import net.spacetivity.world.generation.WorldBuilder;
 import net.spacetivity.world.generation.WorldTemplate;
+import net.spacetivity.world.password.HashingManager;
+import net.spacetivity.world.password.PasswordContainer;
+import net.spacetivity.world.scoreboardapi.Sidebar;
+import net.spacetivity.world.settings.WorldSettings;
+import net.spacetivity.world.settings.WorldSettingsFileManager;
+import net.spacetivity.world.settings.WorldState;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.World;
@@ -35,8 +37,7 @@ public class WorldUtils {
      * @return a {@link List<File>} with all world directories from all minecraft worlds stored on the server
      */
     public List<File> getAllWorldFiles() {
-        return Arrays.stream(Objects.requireNonNull(Bukkit.getWorldContainer().listFiles())).filter(File::isDirectory)
-                .collect(Collectors.toList());
+        return Arrays.stream(Objects.requireNonNull(Bukkit.getWorldContainer().listFiles())).filter(File::isDirectory).collect(Collectors.toList());
     }
 
     /**
@@ -98,13 +99,10 @@ public class WorldUtils {
         WorldTemplate worldTemplate = WorldTemplate.valueOf(template.toUpperCase() + "_WORLD");
         World newWorld;
 
-        if (!usePassword)
-            newWorld = new WorldBuilder(worldName, worldTemplate).build(false);
-        else
-            newWorld = new WorldBuilder(worldName, worldTemplate).build(true, password);
+        if (!usePassword) newWorld = new WorldBuilder(worldName, worldTemplate).build(false);
+        else newWorld = new WorldBuilder(worldName, worldTemplate).build(true, password);
 
-        if (!hasWorldSettings(worldName))
-            createSettingsForWorld(executor, worldName);
+        if (!hasWorldSettings(worldName)) createSettingsForWorld(executor, worldName);
 
         long endTime = System.currentTimeMillis() - startTime;
         executor.sendMessage(SpaceWorldManager.PREFIX + "Finished generation for world §f" + worldName + "§7. (in §a" + endTime + "§7ms)");
@@ -128,6 +126,30 @@ public class WorldUtils {
 
     public WorldSettings getSettings(String worldName) {
         return worldSettingsFileManager.getWorldSettings(worldName);
+    }
+
+    public void updateStatus(String worldName) {
+        WorldSettings settings = worldSettingsFileManager.getWorldSettings(worldName);
+        WorldState newState;
+
+        if (settings.getState().equals(WorldState.IN_PROGRESS)) newState = WorldState.FINISHED;
+        else newState = WorldState.IN_PROGRESS;
+
+        settings.setState(newState);
+        worldSettingsFileManager.updateSettingsForWorld(worldName, settings);
+        Bukkit.getOnlinePlayers().forEach(player -> SpaceWorldManager.getInstance().getSidebarManager().getSidebar(player.getUniqueId()).ifPresent(Sidebar::update));
+    }
+
+    public WorldState getState(String worldName) {
+        return getSettings(worldName).getState();
+    }
+
+    public WorldState getOtherState(String worldName) {
+        WorldState state = getState(worldName);
+        WorldState result;
+        if (WorldState.IN_PROGRESS.equals(state)) result = WorldState.FINISHED;
+        else result = WorldState.IN_PROGRESS;
+        return result;
     }
 
     public String getCreator(String worldName) {
