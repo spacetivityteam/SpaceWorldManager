@@ -1,2 +1,2 @@
 # SpaceWorldManager
-A plugin to generate and manage minecraft worlds, developed by TGamings.
+A plugin to generate and manage minecraft worlds, developed by TGamings & FallenBreak.
