@@ -6,49 +6,43 @@ import net.spacetivity.world.inventoryapi.ClickableItem;
 import net.spacetivity.world.inventoryapi.InventoryUtils;
 import net.spacetivity.world.inventoryapi.SmartInventory;
 import net.spacetivity.world.inventoryapi.content.*;
+import net.spacetivity.world.settings.WorldSettings;
 import net.spacetivity.world.utils.WorldUtils;
 import net.spacetivity.world.utils.item.ItemBuilder;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.OfflinePlayer;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 import java.util.function.Consumer;
 
 @AllArgsConstructor
-public class TrustedPlayerInventory implements InventoryProvider {
-
-    private final WorldUtils worldUtils = SpaceWorldManager.getInstance().getWorldUtils();
+public class TrustPlayerInventory implements InventoryProvider {
 
     private Player player;
     private World world;
 
     public static SmartInventory getInventory(Player player, World world) {
         return SmartInventory.builder()
-                .provider(new TrustedPlayerInventory(player, world))
+                .provider(new TrustPlayerInventory(player, world))
                 .size(6, 9)
-                .title(InventoryUtils.subTitle("Worlds", world.getName() + " (Trusted)"))
+                .title(InventoryUtils.subTitle("Worlds", world.getName() + " (Trust player)"))
                 .build();
     }
 
     @Override
     public void init(Player player, InventoryContents contents) {
         setPlaceholders(contents);
-        InventoryUtils.backToMainPageItem(contents, SlotPos.of(0, 3), player, WorldOptionsInventory.getInventory(player, world));
-
-        contents.set(0, 5, ClickableItem.of(ItemBuilder.builder(Material.HOPPER, "§b§lChoose player").build(), event ->
-                TrustPlayerInventory.getInventory(player, world).open(player)));
+        InventoryUtils.backToMainPageItem(contents, SlotPos.of(0, 4), player, WorldOptionsInventory.getInventory(player, world));
 
         Pagination pagination = contents.pagination();
 
         loadAllPlayers(clickableItems -> {
             if (clickableItems.isEmpty()) {
-                contents.set(SlotPos.of(2, 4), ClickableItem.empty(new ItemBuilder(Material.BARRIER).setDisplayName("§cNo players trusted!").build()));
+                contents.set(SlotPos.of(2, 4), ClickableItem.empty(new ItemBuilder(Material.BARRIER).setDisplayName("§cNo players found!").build()));
             } else {
                 pagination.setItems(clickableItems.toArray(new ClickableItem[0]));
                 pagination.setItemsPerPage(36);
@@ -62,16 +56,22 @@ public class TrustedPlayerInventory implements InventoryProvider {
     private void loadAllPlayers(Consumer<List<ClickableItem>> result) {
         List<ItemBuilder> itemBuilders = new ArrayList<>();
         List<ClickableItem> items = new ArrayList<>();
-        List<String> trustedBuilders = worldUtils.getSettings(world.getName()).getTrustedBuilders();
 
-        for (String trustedPlayerName : trustedBuilders) {
-            OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(UUID.fromString(trustedPlayerName));
-            getDisplayItem(offlinePlayer, itemBuilders::add);
-        }
+        WorldUtils worldUtils = SpaceWorldManager.getInstance().getWorldUtils();
+        WorldSettings settings = worldUtils.getSettings(world.getName());
+
+        List<OfflinePlayer> offlinePlayers = Arrays.stream(Bukkit.getOfflinePlayers())
+                .filter(offlinePlayer -> !settings.getTrustedBuilders().contains(offlinePlayer.getUniqueId().toString()))
+                .toList();
+
+        for (OfflinePlayer offlinePlayer : offlinePlayers) getDisplayItem(offlinePlayer, itemBuilders::add);
 
         itemBuilders.forEach(itemBuilder -> items.add(ClickableItem.of(itemBuilder.build(), event -> {
             OfflinePlayer offlinePlayer = Bukkit.getOfflinePlayer(itemBuilder.getData("player", UUID.class));
-            TrustedOptionsInventory.getInventory(player, world, offlinePlayer).open(player);
+            settings.getTrustedBuilders().add(offlinePlayer.getUniqueId().toString());
+            SpaceWorldManager.getInstance().getWorldSettingsFileManager().updateSettingsForWorld(world.getName(), settings);
+            player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
+            TrustedPlayerInventory.getInventory(player, world).open(player);
         })));
 
         result.accept(items);
@@ -79,7 +79,7 @@ public class TrustedPlayerInventory implements InventoryProvider {
 
     private void getDisplayItem(OfflinePlayer offlinePlayer, Consumer<ItemBuilder> result) {
         ItemBuilder itemBuilder = ItemBuilder.builder(Material.PLAYER_HEAD, "§b§l" + offlinePlayer.getName())
-                .setLores(List.of("§8Click to manage"))
+                .setLores(List.of("§8Click to trust"))
                 .addItemFlag(ItemFlag.HIDE_ATTRIBUTES);
 
         itemBuilder.setData("player", offlinePlayer.getUniqueId());

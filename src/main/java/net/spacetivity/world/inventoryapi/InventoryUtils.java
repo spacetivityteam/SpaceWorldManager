@@ -94,7 +94,7 @@ public class InventoryUtils {
         List<String> lore = new ArrayList<>();
 
         WorldUtils worldUtils = SpaceWorldManager.getInstance().getWorldUtils();
-        lore.add("§7" + worldUtils.getState(world.getName()).getName());
+        lore.add("§7> " + worldUtils.getState(world.getName()).getName());
         lore.add("§8" + worldUtils.getOtherState(world.getName()).getName());
 
         itemMeta.setLore(lore);

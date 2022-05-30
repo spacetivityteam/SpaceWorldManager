@@ -81,7 +81,7 @@ public class WorldOptionsInventory implements InventoryProvider {
                 TrustedPlayerInventory.getInventory(player, world).open(player)));
 
         ItemStack stateItem = ItemBuilder.builder(Material.COMPARATOR, "§b§lStatus")
-                .setLores(List.of("§7" + worldUtils.getState(world.getName()).getName(), "§8" + worldUtils.getOtherState(world.getName()).getName()))
+                .setLores(List.of("§7> " + worldUtils.getState(world.getName()).getName(), "§8" + worldUtils.getOtherState(world.getName()).getName()))
                 .build();
 
         contents.set(1, 8, ClickableItem.of(stateItem, event -> {
