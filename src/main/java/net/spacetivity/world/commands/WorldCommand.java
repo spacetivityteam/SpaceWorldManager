@@ -20,6 +20,7 @@ import org.bukkit.World;
 import org.bukkit.command.*;
 import org.bukkit.entity.Player;
 import org.bukkit.generator.WorldInfo;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -54,14 +55,39 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args.length == 1) {
+            if (args[0].equalsIgnoreCase("item")) {
+
+                if (PermissionChecker.notHasPermission(player, "swm.item")) {
+                    player.sendMessage(SpaceWorldManager.NO_PERMISSION);
+                    return true;
+                }
+
+                ItemStack worldItem = SpaceWorldManager.getInstance().giveWorldItem(player);
+
+                if (player.getInventory().contains(worldItem.getType())) {
+                    MessageUtil.send(player, "world.item.alreadyInInventory");
+                    return true;
+                }
+
+                player.getInventory().addItem(worldItem);
+
+                return true;
+            }
+
             if (args[0].equalsIgnoreCase("gui")) {
+
+                if (PermissionChecker.notHasPermission(player, "swm.command.gui")) {
+                    player.sendMessage(SpaceWorldManager.NO_PERMISSION);
+                    return true;
+                }
+
                 WorldInventory.getInventory(player).open(player);
                 return true;
             }
 
             if (args[0].equalsIgnoreCase("templates")) {
 
-                if (!PermissionChecker.hasPermission(player, "awm.command.templates")) {
+                if (PermissionChecker.notHasPermission(player, "swm.command.templates")) {
                     player.sendMessage(SpaceWorldManager.NO_PERMISSION);
                     return true;
                 }
@@ -75,7 +101,7 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
 
             if (args[0].equalsIgnoreCase("list")) {
 
-                if (!PermissionChecker.hasPermission(player, "awm.command.list")) {
+                if (PermissionChecker.notHasPermission(player, "swm.command.list")) {
                     player.sendMessage(SpaceWorldManager.NO_PERMISSION);
                     return true;
                 }
@@ -92,7 +118,7 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
 
             if (args[0].equalsIgnoreCase("info")) {
 
-                if (!PermissionChecker.hasPermission(player, "awm.command.info")) {
+                if (PermissionChecker.notHasPermission(player, "swm.command.info")) {
                     player.sendMessage(SpaceWorldManager.NO_PERMISSION);
                     return true;
                 }
@@ -107,7 +133,7 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
 
         } else if (args.length == 2 && args[0].equalsIgnoreCase("list")) {
 
-            if (!PermissionChecker.hasPermission(player, "awm.command.list")) {
+            if (PermissionChecker.notHasPermission(player, "swm.command.list")) {
                 player.sendMessage(SpaceWorldManager.NO_PERMISSION);
                 return true;
             }
@@ -131,7 +157,7 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
 
         } else if ((args.length == 2 || args.length == 3) && args[0].equalsIgnoreCase("join")) {
 
-            if (!PermissionChecker.hasPermission(player, "awm.command.join")) {
+            if (PermissionChecker.notHasPermission(player, "swm.command.join")) {
                 player.sendMessage(SpaceWorldManager.NO_PERMISSION);
                 return true;
             }
@@ -152,7 +178,7 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
 
         } else if ((args.length == 2 || args.length == 3) && args[0].equalsIgnoreCase("delete")) {
 
-            if (!PermissionChecker.hasPermission(player, "awm.command.delete")) {
+            if (PermissionChecker.notHasPermission(player, "swm.command.delete")) {
                 player.sendMessage(SpaceWorldManager.NO_PERMISSION);
                 return true;
             }
@@ -205,7 +231,7 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
 
         } else if ((args.length == 2 || args.length == 3) && args[0].equalsIgnoreCase("import")) {
 
-            if (!PermissionChecker.hasPermission(player, "awm.command.import")) {
+            if (PermissionChecker.notHasPermission(player, "swm.command.import")) {
                 player.sendMessage(SpaceWorldManager.NO_PERMISSION);
                 return true;
             }
@@ -240,7 +266,7 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
 
         } else if ((args.length == 2 || args.length == 3) && args[0].equalsIgnoreCase("lock")) {
 
-            if (!PermissionChecker.hasPermission(player, "awm.command.lock")) {
+            if (PermissionChecker.notHasPermission(player, "swm.command.lock")) {
                 player.sendMessage(SpaceWorldManager.NO_PERMISSION);
                 return true;
             }
@@ -268,7 +294,7 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
 
         } else if ((args.length == 2 || args.length == 3) && args[0].equalsIgnoreCase("unlock")) {
 
-            if (!PermissionChecker.hasPermission(player, "awm.command.unlock")) {
+            if (PermissionChecker.notHasPermission(player, "swm.command.unlock")) {
                 player.sendMessage(SpaceWorldManager.NO_PERMISSION);
                 return true;
             }
@@ -297,7 +323,7 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
 
         } else if ((args.length == 3 || args.length == 4) && args[0].equalsIgnoreCase("create")) {
 
-            if (!PermissionChecker.hasPermission(player, "awm.command.create")) {
+            if (PermissionChecker.notHasPermission(player, "swm.command.create")) {
                 player.sendMessage(SpaceWorldManager.NO_PERMISSION);
                 return true;
             }
@@ -333,7 +359,7 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
 
             if (trustMode.equalsIgnoreCase("trust")) {
 
-                if (!PermissionChecker.hasPermission(player, "awm.command.trust")) {
+                if (PermissionChecker.notHasPermission(player, "swm.command.trust")) {
                     player.sendMessage(SpaceWorldManager.NO_PERMISSION);
                     return true;
                 }
@@ -351,7 +377,7 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
 
             } else if (trustMode.equalsIgnoreCase("untrust")) {
 
-                if (!PermissionChecker.hasPermission(player, "awm.command.untrust")) {
+                if (PermissionChecker.notHasPermission(player, "swm.command.untrust")) {
                     player.sendMessage(SpaceWorldManager.NO_PERMISSION);
                     return true;
                 }
@@ -413,20 +439,21 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
     }
 
     private void sendUsage(Player player) {
-        MessageUtil.send(player,"world.command.usage.title");
-        MessageUtil.sendAndAppend(player,"world.command.usage.prefix","swm create <Worldname> <Template> [Password]");
-        MessageUtil.sendAndAppend(player,"world.command.usage.prefix","swm delete <Worldname> [Password]");
-        MessageUtil.sendAndAppend(player,"world.command.usage.prefix","swm import <Worldname> [Password]");
-        MessageUtil.sendAndAppend(player,"world.command.usage.prefix","swm join <Worldname> [Password]");
-        MessageUtil.sendAndAppend(player,"world.command.usage.prefix","swm lock <WorldName> <Password>");
-        MessageUtil.sendAndAppend(player,"world.command.usage.prefix","swm unlock <Worldname> [Password]");
-        MessageUtil.sendAndAppend(player,"world.command.usage.prefix","swm trust <Player> <Worldname>");
-        MessageUtil.sendAndAppend(player,"world.command.usage.prefix","swm untrust <Player> <Worldname>");
-        MessageUtil.sendAndAppend(player,"world.command.usage.prefix","swm list <Page>");
-        MessageUtil.sendAndAppend(player,"world.command.usage.prefix","swm list");
-        MessageUtil.sendAndAppend(player,"world.command.usage.prefix","swm templates");
-        MessageUtil.sendAndAppend(player,"world.command.usage.prefix","swm info");
-        MessageUtil.sendAndAppend(player,"world.command.usage.prefix","swm gui");
+        MessageUtil.send(player, "world.command.usage.title");
+        MessageUtil.sendAndAppend(player, "world.command.usage.prefix", "swm create <Worldname> <Template> [Password]");
+        MessageUtil.sendAndAppend(player, "world.command.usage.prefix", "swm delete <Worldname> [Password]");
+        MessageUtil.sendAndAppend(player, "world.command.usage.prefix", "swm import <Worldname> [Password]");
+        MessageUtil.sendAndAppend(player, "world.command.usage.prefix", "swm join <Worldname> [Password]");
+        MessageUtil.sendAndAppend(player, "world.command.usage.prefix", "swm lock <WorldName> <Password>");
+        MessageUtil.sendAndAppend(player, "world.command.usage.prefix", "swm unlock <Worldname> [Password]");
+        MessageUtil.sendAndAppend(player, "world.command.usage.prefix", "swm trust <Player> <Worldname>");
+        MessageUtil.sendAndAppend(player, "world.command.usage.prefix", "swm untrust <Player> <Worldname>");
+        MessageUtil.sendAndAppend(player, "world.command.usage.prefix", "swm list <Page>");
+        MessageUtil.sendAndAppend(player, "world.command.usage.prefix", "swm list");
+        MessageUtil.sendAndAppend(player, "world.command.usage.prefix", "swm templates");
+        MessageUtil.sendAndAppend(player, "world.command.usage.prefix", "swm info");
+        MessageUtil.sendAndAppend(player, "world.command.usage.prefix", "swm gui");
+        MessageUtil.sendAndAppend(player, "world.command.usage.prefix", "swm item");
     }
 
     @Nullable

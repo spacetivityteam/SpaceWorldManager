@@ -30,7 +30,7 @@ public class StopLagCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
-        if (!PermissionChecker.hasPermission(player, "awm.command.stoplag")) {
+        if (PermissionChecker.notHasPermission(player, "swm.command.stoplag")) {
             player.sendMessage(SpaceWorldManager.NO_PERMISSION);
             return true;
         }

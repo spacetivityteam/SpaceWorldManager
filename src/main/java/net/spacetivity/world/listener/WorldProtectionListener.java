@@ -1,6 +1,7 @@
 package net.spacetivity.world.listener;
 
 import net.spacetivity.world.SpaceWorldManager;
+import net.spacetivity.world.configuration.ConfigurationData;
 import net.spacetivity.world.message.MessageUtil;
 import net.spacetivity.world.scoreboard.PlayerWorldScoreboard;
 import net.spacetivity.world.scoreboardapi.Sidebar;
@@ -15,14 +16,21 @@ import org.bukkit.event.block.BlockPhysicsEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerChangedWorldEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.inventory.ItemStack;
 
 public record WorldProtectionListener(WorldSettingsFileManager worldSettingsFileManager) implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
+        ConfigurationData config = SpaceWorldManager.getInstance().getConfigurationFileManager().getConfig();
 
-        if (SpaceWorldManager.getInstance().getConfigurationFileManager().getConfig().isShowScoreboard()) {
+        ItemStack worldItem = SpaceWorldManager.getInstance().giveWorldItem(player);
+
+        if (config.isGiveWorldItemOnJoin() && !player.getInventory().contains(worldItem.getType()))
+            player.getInventory().addItem(worldItem);
+
+        if (config.isShowScoreboard()) {
             PlayerWorldScoreboard scoreboard = new PlayerWorldScoreboard(player);
             scoreboard.initSidebar();
             SpaceWorldManager.getInstance().getSidebarManager().setSidebar(player, scoreboard);

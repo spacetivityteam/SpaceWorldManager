@@ -3,6 +3,7 @@ package net.spacetivity.world.configuration;
 import net.spacetivity.world.utils.FileUtils;
 import lombok.Getter;
 import net.spacetivity.world.SpaceWorldManager;
+import org.bukkit.Material;
 
 import java.io.File;
 import java.io.IOException;
@@ -29,12 +30,14 @@ public class ConfigurationFileManager {
 
         File configFile = configPath.toFile();
         ConfigurationData configData = new ConfigurationData();
-        configData.setBypassPermission("awm.bypass");
+        configData.setBypassPermission("swm.bypass");
         configData.setMainWorldName("world");
         configData.setSaveOnShutdown(true);
         configData.setStopLag(false);
         configData.setShowCurrentWorldActionBar(true);
         configData.setShowScoreboard(true);
+        configData.setGiveWorldItemOnJoin(true);
+        configData.setWorldItemMaterial(Material.NETHER_STAR.name());
         fileUtils.saveFile(configFile, configData);
     }
 

@@ -11,5 +11,7 @@ public class ConfigurationData {
     private boolean stopLag;
     private boolean showCurrentWorldActionBar;
     private boolean showScoreboard;
+    private boolean giveWorldItemOnJoin;
+    private String worldItemMaterial;
 
 }

@@ -7,7 +7,7 @@ import net.spacetivity.world.inventoryapi.SmartInventory;
 import net.spacetivity.world.inventoryapi.content.InventoryContents;
 import net.spacetivity.world.inventoryapi.content.InventoryProvider;
 import net.spacetivity.world.inventoryapi.content.SlotPos;
-import net.spacetivity.world.utils.ItemBuilder;
+import net.spacetivity.world.utils.item.ItemBuilder;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.entity.Player;

@@ -3,7 +3,7 @@ package net.spacetivity.world.inventoryapi;
 import net.spacetivity.world.inventoryapi.content.InventoryContents;
 import net.spacetivity.world.inventoryapi.content.Pagination;
 import net.spacetivity.world.inventoryapi.content.SlotPos;
-import net.spacetivity.world.utils.ItemBuilder;
+import net.spacetivity.world.utils.item.ItemBuilder;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;

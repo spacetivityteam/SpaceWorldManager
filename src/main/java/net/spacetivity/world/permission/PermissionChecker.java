@@ -5,12 +5,15 @@ import org.bukkit.entity.Player;
 
 public class PermissionChecker {
 
-    private static boolean hasByPassPermission(Player player){
+    public static boolean hasByPassPermission(Player player){
         return player.hasPermission(SpaceWorldManager.getInstance().getConfigurationFileManager().getConfig().getBypassPermission());
     }
 
-    public static boolean hasPermission(Player player, String neededPermission) {
-        return hasByPassPermission(player) || (player.hasPermission(neededPermission));
+    public static boolean notHasPermission(Player player, String neededPermission) {
+        return !hasByPassPermission(player) && (!player.hasPermission(neededPermission));
     }
 
+    public static boolean hasPermission(Player player, String neededPermission) {
+        return hasByPassPermission(player) || player.hasPermission(neededPermission);
+    }
 }

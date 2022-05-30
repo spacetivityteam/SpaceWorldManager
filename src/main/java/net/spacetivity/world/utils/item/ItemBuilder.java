@@ -1,11 +1,13 @@
-package net.spacetivity.world.utils;
+package net.spacetivity.world.utils.item;
 
 import com.google.gson.Gson;
 import lombok.Getter;
 import net.spacetivity.world.SpaceWorldManager;
+import net.spacetivity.world.utils.SkullBuilder;
 import org.bukkit.Material;
 import org.bukkit.NamespacedKey;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -21,12 +23,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.concurrent.ThreadLocalRandom;
+import java.util.function.Consumer;
 
 @Getter
 public class ItemBuilder {
 
     protected ItemStack itemStack;
     private ItemMeta itemMeta;
+    private Consumer<PlayerInteractEvent> action;
 
     public static ItemStack placeHolder(Material material) {
         return new ItemBuilder(material).setDisplayName(" ").build();
@@ -114,6 +118,12 @@ public class ItemBuilder {
             NamespacedKey namespacedKey = new NamespacedKey(SpaceWorldManager.getInstance(), "id");
             return dataContainer.getOrDefault(namespacedKey, PersistentDataType.INTEGER, 0);
         }
+    }
+
+    public ItemBuilder onInteract(Consumer<PlayerInteractEvent> action) {
+        this.action = action;
+        SpaceWorldManager.INTERACTIVE_ITEMS.add(this);
+        return this;
     }
 
     public ItemBuilder setDisplayName(String name) {

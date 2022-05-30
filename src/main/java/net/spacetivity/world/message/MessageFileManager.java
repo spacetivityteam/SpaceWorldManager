@@ -41,6 +41,8 @@ public class MessageFileManager {
         List<Message> messages = new ArrayList<>();
 
         messages.add(Message.prefix("§3SWM §7|"));
+        messages.add(Message.of("world.item.displayName", "§b§lWorld Manager", ChatMessageType.CHAT, false, true));
+        messages.add(Message.of("world.item.alreadyInInventory", "§cYou already have the world item in your inventory!", ChatMessageType.CHAT, true, true));
         messages.add(Message.of("world.command.usage.title", "All available commands:", ChatMessageType.CHAT, true, true));
         messages.add(Message.of("world.command.usage.prefix", "§f- §7/", ChatMessageType.CHAT, false, true));
 

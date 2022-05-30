@@ -2,34 +2,40 @@ package net.spacetivity.world;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import net.spacetivity.world.commands.StopLagCommand;
-import net.spacetivity.world.commands.WorldCommand;
-import net.spacetivity.world.configuration.ConfigurationFileManager;
-import net.spacetivity.world.inventoryapi.InventoryManager;
-import net.spacetivity.world.listener.WorldHandleListener;
-import net.spacetivity.world.listener.WorldProtectionListener;
-import net.spacetivity.world.message.MessageFileManager;
-import net.spacetivity.world.password.HashingManager;
-import net.spacetivity.world.scoreboardapi.PlayerTagManager;
-import net.spacetivity.world.scoreboardapi.SidebarManager;
-import net.spacetivity.world.settings.WorldSettingsFileManager;
-import net.spacetivity.world.utils.FileUtils;
-import net.spacetivity.world.utils.PageConverter;
-import net.spacetivity.world.utils.WorldLoadingProcess;
-import net.spacetivity.world.utils.WorldUtils;
 import lombok.Getter;
 import lombok.SneakyThrows;
 import net.md_5.bungee.api.ChatMessageType;
 import net.md_5.bungee.api.chat.TextComponent;
+import net.spacetivity.world.commands.StopLagCommand;
+import net.spacetivity.world.commands.WorldCommand;
+import net.spacetivity.world.configuration.ConfigurationFileManager;
+import net.spacetivity.world.inventory.WorldInventory;
+import net.spacetivity.world.inventoryapi.InventoryManager;
+import net.spacetivity.world.listener.WorldHandleListener;
+import net.spacetivity.world.listener.WorldProtectionListener;
+import net.spacetivity.world.message.Message;
+import net.spacetivity.world.message.MessageFileManager;
+import net.spacetivity.world.message.MessageUtil;
+import net.spacetivity.world.password.HashingManager;
+import net.spacetivity.world.permission.PermissionChecker;
+import net.spacetivity.world.scoreboardapi.PlayerTagManager;
+import net.spacetivity.world.scoreboardapi.SidebarManager;
+import net.spacetivity.world.settings.WorldSettingsFileManager;
+import net.spacetivity.world.utils.*;
+import net.spacetivity.world.utils.item.ItemActionListener;
+import net.spacetivity.world.utils.item.ItemBuilder;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemFlag;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
-import java.util.HashSet;
-import java.util.Objects;
-import java.util.Set;
+import java.util.*;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 @Getter
 public final class SpaceWorldManager extends JavaPlugin {
@@ -37,6 +43,7 @@ public final class SpaceWorldManager extends JavaPlugin {
     public static final String PREFIX = "§3NWM §7| ";
     public static final String NO_PERMISSION = PREFIX + "§cYou are not permitted to execute this action.";
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    public static final List<ItemBuilder> INTERACTIVE_ITEMS = new CopyOnWriteArrayList<>();
 
     @Getter
     private static SpaceWorldManager instance;
@@ -77,6 +84,7 @@ public final class SpaceWorldManager extends JavaPlugin {
 
         Bukkit.getPluginManager().registerEvents(new WorldHandleListener(), this);
         Bukkit.getPluginManager().registerEvents(new WorldProtectionListener(worldSettingsFileManager), this);
+        Bukkit.getPluginManager().registerEvents(new ItemActionListener(), this);
 
         if (configurationFileManager.getConfig().isShowCurrentWorldActionBar()) showWorldInformationActionBar();
     }
@@ -89,6 +97,22 @@ public final class SpaceWorldManager extends JavaPlugin {
 
         if (configurationFileManager.getConfig().isShowCurrentWorldActionBar())
             worldInformationTask.cancel();
+    }
+
+    public ItemStack giveWorldItem(Player player) {
+        String worldItemMaterial = configurationFileManager.getConfig().getWorldItemMaterial();
+        Material material = (worldItemMaterial == null ? Material.NETHER_STAR : Material.valueOf(worldItemMaterial));
+        Optional<Message> message = MessageUtil.get("world.item.displayName");
+
+        return ItemBuilder.builder(material, message.isEmpty() ? "§b§lWorld Manager" : message.get().getText())
+                .addItemFlag(ItemFlag.HIDE_ATTRIBUTES)
+                .addItemFlag(ItemFlag.HIDE_ENCHANTS)
+                .addItemFlag(ItemFlag.HIDE_POTION_EFFECTS)
+                .onInteract(event -> {
+                    if (PermissionChecker.hasPermission(player, "swm.command.gui"))
+                        WorldInventory.getInventory(player).open(player);
+                })
+                .build();
     }
 
     private void startWorldLoadingProcesses() {

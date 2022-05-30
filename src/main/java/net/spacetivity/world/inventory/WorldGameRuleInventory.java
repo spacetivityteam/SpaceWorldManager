@@ -5,7 +5,7 @@ import net.spacetivity.world.inventoryapi.ClickableItem;
 import net.spacetivity.world.inventoryapi.InventoryUtils;
 import net.spacetivity.world.inventoryapi.SmartInventory;
 import net.spacetivity.world.inventoryapi.content.*;
-import net.spacetivity.world.utils.ItemBuilder;
+import net.spacetivity.world.utils.item.ItemBuilder;
 import org.bukkit.GameRule;
 import org.bukkit.Material;
 import org.bukkit.Sound;

@@ -130,6 +130,10 @@ public class WorldUtils {
         return worldSettingsFileManager.getWorldSettings(worldName);
     }
 
+    public String getCreator(String worldName) {
+        return getSettings(worldName).getCreatorName();
+    }
+
     public void insertPasswordToWorld(String worldName, String rawPassword) throws NoSuchAlgorithmException {
         PasswordContainer passwordContainer = new PasswordContainer();
         HashingManager hashingManager = SpaceWorldManager.getInstance().getHashingManager();
