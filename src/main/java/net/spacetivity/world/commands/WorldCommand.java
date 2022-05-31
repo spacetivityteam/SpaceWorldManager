@@ -93,10 +93,10 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
                     return true;
                 }
 
-                player.sendMessage(SpaceWorldManager.PREFIX + "All available world-templates:");
+                MessageUtil.send(player, "world.command.template");
                 StringJoiner stringJoiner = new StringJoiner(", ");
                 Arrays.stream(WorldTemplate.values()).map(worldTemplate -> worldTemplate.name().split("_")[0]).toList().forEach(stringJoiner::add);
-                player.sendMessage(SpaceWorldManager.PREFIX + stringJoiner);
+                MessageUtil.send(player, "world.command.template.suffix", stringJoiner);
                 return true;
             }
 
@@ -125,9 +125,9 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
                 }
 
                 World world = player.getWorld();
-                player.sendMessage(SpaceWorldManager.PREFIX + "You are in the world: §f" + world.getName());
+                MessageUtil.send(player, "world.command.info", world.getName());
                 if (worldUtils.isWorldLocked(worldUtils.getWorldFolder(world.getName())))
-                    player.sendMessage(SpaceWorldManager.PREFIX + "This world is §clocked§7.");
+                    MessageUtil.send(player, "world.command.lock");
 
                 return true;
             }
@@ -144,7 +144,7 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
             try {
                 pageNumber = Integer.parseInt(args[1]);
             } catch (NumberFormatException e) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "Please enter a integer!");
+                MessageUtil.send(player, "messages.needInteger");
                 return true;
             }
 

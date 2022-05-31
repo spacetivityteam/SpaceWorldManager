@@ -53,6 +53,7 @@ public class MessageFileManager {
         messages.add(Message.of("world.command.unlock.isNotLocked", "§7This world is not locked.", ChatMessageType.CHAT, true, true));
         messages.add(Message.of("world.command.unlock.successful", "§7Password from world §f{0} §7was removed.", ChatMessageType.CHAT, true, true));
         messages.add(Message.of("world.command.lock.isLocked", "§7This world is already locked.", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("world.command.lock", "§7This world is §clocked§7.", ChatMessageType.CHAT, true, true));
         messages.add(Message.of("world.command.import.successful", "World §f{0} §7was successfully imported.", ChatMessageType.CHAT, true, true));
         messages.add(Message.of("world.command.import.isNoWorldFolder", "§7There is no world folder existing with that name.", ChatMessageType.CHAT, true, true));
         messages.add(Message.of("world.command.import.isAlreadyLoaded", "§7This world is already imported and loaded.", ChatMessageType.CHAT, true, true));
@@ -61,7 +62,11 @@ public class MessageFileManager {
         messages.add(Message.of("world.command.delete.mainWorld", "§7You can't delete the main world ingame.", ChatMessageType.CHAT, true, true));
         messages.add(Message.of("world.command.delete.confirm", "Are you sure that you want delete the world §f{0}§7?", ChatMessageType.CHAT, true, true));
         messages.add(Message.of("world.command.delete.confirm.suffix", "§7If your decision is made, type this command again. (lasts §f60 §7seconds)", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("world.command.info", "§7You are in the world: §f{0}", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("world.command.template", "§7All available world-templates:", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("world.command.template.suffix", "§7{ß}", ChatMessageType.CHAT, true, true));
 
+        messages.add(Message.of("messages.needInteger", "§7Please enter a integer!", ChatMessageType.CHAT, true, true));
         messages.add(Message.of("messages.noPermissions", "§cYou are not permitted to execute this action.", ChatMessageType.CHAT, true, true));
         messages.add(Message.of("messages.playerOffline", "This player is currently offline!", ChatMessageType.CHAT, true,true));
         messages.add(Message.of("messages.join.world", "§7Entered world §f{0}§7.", ChatMessageType.CHAT, true, true));
