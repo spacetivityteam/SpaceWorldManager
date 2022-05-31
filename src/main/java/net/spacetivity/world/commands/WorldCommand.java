@@ -166,7 +166,7 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
             final String worldName = args[1];
 
             if (!worldUtils.isWorldLoaded(worldName)) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "This world doesn't exist.");
+                MessageUtil.send(player, "world.command.create.isExist");
                 return true;
             }
 
@@ -187,7 +187,7 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
             final String worldName = args[1];
 
             if (!worldUtils.isWorldLoaded(worldName)) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "This world doesn't exist.");
+                MessageUtil.send(player, "world.command.create.isExist");
                 return true;
             }
 
@@ -195,13 +195,13 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
             World mainWorld = worldUtils.getMinecraftMainWorld().get();
 
             if (mainWorld.getName().equalsIgnoreCase(worldName)) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "You can't delete the main world ingame.");
+                MessageUtil.send(player, "world.command.delete.mainWorld");
                 return true;
             }
 
             if (worldUtils.worldDeleteConfirmation.getIfPresent(player.getUniqueId()) == null) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "Are you sure that you want delete the world §f" + worldName + "§7?");
-                player.sendMessage(SpaceWorldManager.PREFIX + "If your decision is made, type this command again. (lasts §f60 §7seconds)");
+                MessageUtil.send(player, "world.command.delete.confirm", worldName);
+                MessageUtil.send(player, "world.command.delete.confirm.suffix");
                 worldUtils.worldDeleteConfirmation.put(player.getUniqueId(), true);
                 return true;
             }
@@ -225,8 +225,8 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
                     }
                 }
 
-                player.sendMessage(SpaceWorldManager.PREFIX + "World §f" + worldName + " §7was unloaded.");
-                player.sendMessage(SpaceWorldManager.PREFIX + "World §f" + worldName + " §7was deleted. Storage file was also destroyed.");
+                MessageUtil.send(player, "world.command.unload.successful", worldName);
+                MessageUtil.send(player, "world.command.unload.successful.suffix", worldName);
                 worldUtils.worldDeleteConfirmation.invalidate(player.getUniqueId());
             });
 
@@ -240,12 +240,12 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
             String worldName = args[1];
 
             if (Bukkit.getWorld(worldName) != null) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "This world is already imported and loaded.");
+                MessageUtil.send(player, "world.command.import.isAlreadyLoaded");
                 return true;
             }
 
             if (!worldUtils.isWorldFolderExisting(worldName)) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "There is no world folder existing with that name.");
+                MessageUtil.send(player, "world.command.import.isNoWorldFolder");
                 return true;
             }
 
@@ -263,7 +263,7 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
             if (!worldUtils.hasWorldSettings(worldName))
                 worldUtils.createSettingsForWorld(player, worldName);
 
-            player.sendMessage(SpaceWorldManager.PREFIX + "World §f" + worldName + " §7was successfully imported.");
+            MessageUtil.send(player, "world.command.import.successful", worldName);
 
         } else if ((args.length == 2 || args.length == 3) && args[0].equalsIgnoreCase("lock")) {
 
@@ -275,12 +275,12 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
             String worldName = args[1];
 
             if (!worldUtils.isWorldLoaded(worldName)) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "This world doesn't exist.");
+                MessageUtil.send(player, "world.command.create.isExist");
                 return true;
             }
 
             if (worldUtils.isWorldLocked(worldUtils.getWorldFolder(worldName))) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "This world is already locked.");
+                MessageUtil.send(player, "world.command.lock.isLocked");
                 return true;
             }
 
@@ -303,12 +303,12 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
             String worldName = args[1];
 
             if (!worldUtils.isWorldLoaded(worldName)) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "This world doesn't exist.");
+                MessageUtil.send(player, "world.command.create.isExist");
                 return true;
             }
 
             if (!worldUtils.isWorldLocked(worldUtils.getWorldFolder(worldName))) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "This world is not locked.");
+                MessageUtil.send(player, "world.command.unlock.isNotLocked");
                 return true;
             }
 
@@ -319,7 +319,7 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
                     e.printStackTrace();
                 }
 
-                player.sendMessage(SpaceWorldManager.PREFIX + "Password from world §f" + worldName + " §7was removed.");
+                MessageUtil.send(player, "world.command.unlock.successful", worldName);
             });
 
         } else if ((args.length == 3 || args.length == 4) && args[0].equalsIgnoreCase("create")) {
@@ -345,14 +345,14 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
             Player target = Bukkit.getPlayer(args[1]);
 
             if (target == null) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "This player is currently offline!");
+                MessageUtil.send(player, "messages.playerOffline");
                 return true;
             }
 
             String worldName = args[2];
 
             if (!worldUtils.isWorldLoaded(worldName)) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "This world doesn't exist.");
+                MessageUtil.send(player, "world.command.create.isExist");
                 return true;
             }
 

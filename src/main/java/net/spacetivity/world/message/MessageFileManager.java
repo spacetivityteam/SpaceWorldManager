@@ -48,9 +48,22 @@ public class MessageFileManager {
         messages.add(Message.of("world.command.already.trust", "This player is already trusted.", ChatMessageType.CHAT, true, true));
         messages.add(Message.of("world.command.trust.player", "Player §f{0} §7was trusted for world §f{1}§7.", ChatMessageType.CHAT, true, true));
         messages.add(Message.of("world.command.player.isnotrusted", "§7This player is not trusted.", ChatMessageType.CHAT, true, true));
-        messages.add(Message.of("world.command.untrust.player", "Player §f{0} §7was untrusted for world §f{1}§7.", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("world.command.untrust.player", "§7Player §f{0} §7was untrusted for world §f{1}§7.", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("world.command.create.isExist", "§7This world doesn't exist.", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("world.command.unlock.isNotLocked", "§7This world is not locked.", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("world.command.unlock.successful", "§7Password from world §f{0} §7was removed.", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("world.command.lock.isLocked", "§7This world is already locked.", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("world.command.import.successful", "World §f{0} §7was successfully imported.", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("world.command.import.isNoWorldFolder", "§7There is no world folder existing with that name.", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("world.command.import.isAlreadyLoaded", "§7This world is already imported and loaded.", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("world.command.unload.successful", "§7World §f{0} §7was unloaded.", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("world.command.unload.successful.suffix", "§7World §f{0} §7was deleted. Storage file was also destroyed.", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("world.command.delete.mainWorld", "§7You can't delete the main world ingame.", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("world.command.delete.confirm", "Are you sure that you want delete the world §f{0}§7?", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("world.command.delete.confirm.suffix", "§7If your decision is made, type this command again. (lasts §f60 §7seconds)", ChatMessageType.CHAT, true, true));
 
         messages.add(Message.of("messages.noPermissions", "§cYou are not permitted to execute this action.", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("messages.playerOffline", "This player is currently offline!", ChatMessageType.CHAT, true,true));
         messages.add(Message.of("messages.join.world", "§7Entered world §f{0}§7.", ChatMessageType.CHAT, true, true));
         messages.add(Message.of("messages.denied.join", "§7Permission denied! Please use the correct password to proceed.", ChatMessageType.CHAT, true, true));
         messages.add(Message.of("messages.denied.password", "§7Wrong password. Entry denied.", ChatMessageType.CHAT, true, true));
