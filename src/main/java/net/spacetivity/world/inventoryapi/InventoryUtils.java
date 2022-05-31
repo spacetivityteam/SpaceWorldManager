@@ -1,12 +1,12 @@
 package net.spacetivity.world.inventoryapi;
 
+import net.spacetivity.world.SpaceWorldManager;
 import net.spacetivity.world.inventoryapi.content.InventoryContents;
 import net.spacetivity.world.inventoryapi.content.Pagination;
 import net.spacetivity.world.inventoryapi.content.SlotPos;
+import net.spacetivity.world.utils.WorldUtils;
 import net.spacetivity.world.utils.item.ItemBuilder;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -82,6 +82,52 @@ public class InventoryUtils {
 
         itemMeta.setLore(lore);
 
+        itemToUpdate.setItemMeta(itemMeta);
+    }
+
+    public static void updateClickedStateItem(ItemStack itemToUpdate, World world) {
+        if (itemToUpdate.getItemMeta() == null) return;
+        if (itemToUpdate.getItemMeta().getLore() == null) return;
+        if (itemToUpdate.getItemMeta().getLore().isEmpty()) return;
+
+        ItemMeta itemMeta = itemToUpdate.getItemMeta();
+        List<String> lore = new ArrayList<>();
+
+        WorldUtils worldUtils = SpaceWorldManager.getInstance().getWorldUtils();
+        lore.add("§7> " + worldUtils.getState(world.getName()).getName());
+        lore.add("§8" + worldUtils.getOtherState(world.getName()).getName());
+
+        itemMeta.setLore(lore);
+        itemToUpdate.setItemMeta(itemMeta);
+    }
+
+    public static void updateClickedSpawnItem(ItemStack itemToUpdate, World world) {
+        if (itemToUpdate.getItemMeta() == null) return;
+        if (itemToUpdate.getItemMeta().getLore() == null) return;
+        if (itemToUpdate.getItemMeta().getLore().isEmpty()) return;
+
+        ItemMeta itemMeta = itemToUpdate.getItemMeta();
+        List<String> lore = new ArrayList<>();
+
+        Location spawnLocation = world.getSpawnLocation();
+        lore.add("§7X: §f" + spawnLocation.getX());
+        lore.add("§7Y: §f" + spawnLocation.getYaw());
+        lore.add("§7Z: §f" + spawnLocation.getZ());
+        lore.add("§8Click to update");
+
+        itemMeta.setLore(lore);
+        itemToUpdate.setItemMeta(itemMeta);
+    }
+
+    public static void updateStationaryTimeItem(ItemStack itemToUpdate, boolean value) {
+        if (itemToUpdate.getItemMeta() == null) return;
+        if (itemToUpdate.getItemMeta().getLore() == null) return;
+        if (itemToUpdate.getItemMeta().getLore().isEmpty()) return;
+
+        ItemMeta itemMeta = itemToUpdate.getItemMeta();
+        List<String> lore = new ArrayList<>(generateLore(value));
+
+        itemMeta.setLore(lore);
         itemToUpdate.setItemMeta(itemMeta);
     }
 

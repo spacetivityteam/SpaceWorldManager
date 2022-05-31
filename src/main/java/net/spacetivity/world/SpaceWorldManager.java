@@ -96,6 +96,10 @@ public final class SpaceWorldManager extends JavaPlugin {
 
         if (configurationFileManager.getConfig().isShowCurrentWorldActionBar())
             worldInformationTask.cancel();
+
+        Material material = Material.valueOf(configurationFileManager.getConfig().getWorldItemMaterial());
+        Bukkit.getOnlinePlayers().stream().filter(player -> player.getInventory().contains(material))
+                .toList().forEach(player -> player.getInventory().remove(material));
     }
 
     public ItemStack giveWorldItem(Player player) {
