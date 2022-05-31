@@ -66,6 +66,10 @@ public class MessageFileManager {
         messages.add(Message.of("world.command.template", "§7All available world-templates:", ChatMessageType.CHAT, true, true));
         messages.add(Message.of("world.command.template.suffix", "§7{ß}", ChatMessageType.CHAT, true, true));
 
+        messages.add(Message.of("messages.world.updateTimeToDay", "§7Set time to day.", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("messages.world.updateTimeToNight", "§7Set time to night.", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("messages.world.updateSpawn", "§7World-spawn for world §f{0} §7updated.", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("messages.world.updateSpawn.isIn", "§cYou have to be in that world to update its spawnpoint.", ChatMessageType.CHAT, true, true));
         messages.add(Message.of("messages.needInteger", "§7Please enter a integer!", ChatMessageType.CHAT, true, true));
         messages.add(Message.of("messages.noPermissions", "§cYou are not permitted to execute this action.", ChatMessageType.CHAT, true, true));
         messages.add(Message.of("messages.playerOffline", "This player is currently offline!", ChatMessageType.CHAT, true,true));

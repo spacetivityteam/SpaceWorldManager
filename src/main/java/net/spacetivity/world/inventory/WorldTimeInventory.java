@@ -8,6 +8,8 @@ import net.spacetivity.world.inventoryapi.SmartInventory;
 import net.spacetivity.world.inventoryapi.content.InventoryContents;
 import net.spacetivity.world.inventoryapi.content.InventoryProvider;
 import net.spacetivity.world.inventoryapi.content.SlotPos;
+import net.spacetivity.world.message.Message;
+import net.spacetivity.world.message.MessageUtil;
 import net.spacetivity.world.utils.item.ItemBuilder;
 import org.bukkit.GameRule;
 import org.bukkit.Material;
@@ -40,7 +42,7 @@ public class WorldTimeInventory implements InventoryProvider {
 
         contents.set(1, 2, ClickableItem.of(ItemBuilder.builder(Material.CLOCK, "§b§lDay").build(), event -> {
             world.setTime(1000);
-            player.sendMessage(SpaceWorldManager.PREFIX + "Set time to day.");
+            MessageUtil.send(player, "messages.world.updateTimeToDay");
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
         }));
 
@@ -59,7 +61,7 @@ public class WorldTimeInventory implements InventoryProvider {
 
         contents.set(1, 6, ClickableItem.of(ItemBuilder.builder(Material.CLOCK, "§b§lNight").build(), event -> {
             world.setTime(16000);
-            player.sendMessage(SpaceWorldManager.PREFIX + "Set time to night.");
+            MessageUtil.send(player, "messages.world.updateTimeToNight");
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
         }));
     }
@@ -72,4 +74,5 @@ public class WorldTimeInventory implements InventoryProvider {
         contents.set(2, 0, ClickableItem.empty(ItemBuilder.placeHolder(Material.BLUE_STAINED_GLASS_PANE)));
         contents.set(2, 8, ClickableItem.empty(ItemBuilder.placeHolder(Material.BLUE_STAINED_GLASS_PANE)));
     }
+
 }
