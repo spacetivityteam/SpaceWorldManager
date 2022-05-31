@@ -43,10 +43,22 @@ public class MessageFileManager {
         messages.add(Message.prefix("§3SWM §7|"));
         messages.add(Message.of("world.item.displayName", "§b§lWorld Manager", ChatMessageType.CHAT, false, true));
         messages.add(Message.of("world.item.alreadyInInventory", "§cYou already have the world item in your inventory!", ChatMessageType.CHAT, true, true));
-        messages.add(Message.of("world.command.usage.title", "All available commands:", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("world.command.usage.title", "§7All available commands:", ChatMessageType.CHAT, true, true));
         messages.add(Message.of("world.command.usage.prefix", "§f- §7/", ChatMessageType.CHAT, false, true));
+        messages.add(Message.of("world.command.already.trust", "This player is already trusted.", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("world.command.trust.player", "Player §f{0} §7was trusted for world §f{1}§7.", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("world.command.player.isnotrusted", "§7This player is not trusted.", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("world.command.untrust.player", "Player §f{0} §7was untrusted for world §f{1}§7.", ChatMessageType.CHAT, true, true));
 
+        messages.add(Message.of("messages.noPermissions", "§cYou are not permitted to execute this action.", ChatMessageType.CHAT, true, true));
         messages.add(Message.of("messages.join.world", "§7Entered world §f{0}§7.", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("messages.denied.join", "§7Permission denied! Please use the correct password to proceed.", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("messages.denied.password", "§7Wrong password. Entry denied.", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("messages.successful.password", "§7Access granted!", ChatMessageType.CHAT, true, true));
+
+        messages.add(Message.of("world.join.click.message.prefix", "§7Click§7.", ChatMessageType.CHAT, true, true));
+        messages.add(Message.of("world.join.click.message.body", "§f§lHERE", ChatMessageType.CHAT, false, true));
+        messages.add(Message.of("world.join.click.message.suffix", "§7to teleport yourself to the new world.", ChatMessageType.CHAT, false, true));
 
         return messages;
     }

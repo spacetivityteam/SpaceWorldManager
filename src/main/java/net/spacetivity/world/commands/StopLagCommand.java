@@ -1,5 +1,6 @@
 package net.spacetivity.world.commands;
 
+import net.spacetivity.world.message.MessageUtil;
 import net.spacetivity.world.permission.PermissionChecker;
 import net.spacetivity.world.SpaceWorldManager;
 import net.spacetivity.world.configuration.ConfigurationData;
@@ -31,7 +32,7 @@ public class StopLagCommand implements CommandExecutor, TabCompleter {
         }
 
         if (PermissionChecker.notHasPermission(player, "swm.command.stoplag")) {
-            player.sendMessage(SpaceWorldManager.NO_PERMISSION);
+            MessageUtil.send(player, "messages.noPermissions");
             return true;
         }
 
