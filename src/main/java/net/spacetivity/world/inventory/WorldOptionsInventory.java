@@ -8,6 +8,7 @@ import net.spacetivity.world.inventoryapi.SmartInventory;
 import net.spacetivity.world.inventoryapi.content.InventoryContents;
 import net.spacetivity.world.inventoryapi.content.InventoryProvider;
 import net.spacetivity.world.inventoryapi.content.SlotPos;
+import net.spacetivity.world.message.MessageUtil;
 import net.spacetivity.world.utils.WorldUtils;
 import net.spacetivity.world.utils.item.ItemBuilder;
 import org.bukkit.Location;
@@ -54,12 +55,12 @@ public class WorldOptionsInventory implements InventoryProvider {
 
         contents.set(1, 0, ClickableItem.of(spawnItem, event -> {
             if (!player.getWorld().getName().equalsIgnoreCase(world.getName())) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "§cYou have to be in that world to update its spawnpoint.");
+                MessageUtil.send(player, "messages.world.updateSpawn.isIn");
                 return;
             }
 
             world.setSpawnLocation(player.getLocation());
-            player.sendMessage(SpaceWorldManager.PREFIX + "§7World-spawn for world §f" + world.getName() + " §7updated.");
+            MessageUtil.send(player,"messages.world.updateSpawn", world.getName());
             InventoryUtils.updateClickedSpawnItem(Objects.requireNonNull(event.getCurrentItem()), world);
             player.playSound(player.getLocation(), Sound.ENTITY_PLAYER_LEVELUP, 1, 1);
         }));

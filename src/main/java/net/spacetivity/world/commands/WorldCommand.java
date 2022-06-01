@@ -5,6 +5,7 @@ import net.md_5.bungee.api.chat.TextComponent;
 import net.spacetivity.world.SpaceWorldManager;
 import net.spacetivity.world.generation.WorldTemplate;
 import net.spacetivity.world.inventory.WorldInventory;
+import net.spacetivity.world.message.Message;
 import net.spacetivity.world.message.MessageUtil;
 import net.spacetivity.world.password.PasswordContainer;
 import net.spacetivity.world.permission.PermissionChecker;
@@ -58,7 +59,7 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
             if (args[0].equalsIgnoreCase("item")) {
 
                 if (PermissionChecker.notHasPermission(player, "swm.item")) {
-                    player.sendMessage(SpaceWorldManager.NO_PERMISSION);
+                    MessageUtil.send(player, "messages.noPermissions");
                     return true;
                 }
 
@@ -77,7 +78,7 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
             if (args[0].equalsIgnoreCase("gui")) {
 
                 if (PermissionChecker.notHasPermission(player, "swm.command.gui")) {
-                    player.sendMessage(SpaceWorldManager.NO_PERMISSION);
+                    MessageUtil.send(player, "messages.noPermissions");
                     return true;
                 }
 
@@ -88,21 +89,21 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
             if (args[0].equalsIgnoreCase("templates")) {
 
                 if (PermissionChecker.notHasPermission(player, "swm.command.templates")) {
-                    player.sendMessage(SpaceWorldManager.NO_PERMISSION);
+                    MessageUtil.send(player, "messages.noPermissions");
                     return true;
                 }
 
-                player.sendMessage(SpaceWorldManager.PREFIX + "All available world-templates:");
+                MessageUtil.send(player, "world.command.template");
                 StringJoiner stringJoiner = new StringJoiner(", ");
                 Arrays.stream(WorldTemplate.values()).map(worldTemplate -> worldTemplate.name().split("_")[0]).toList().forEach(stringJoiner::add);
-                player.sendMessage(SpaceWorldManager.PREFIX + stringJoiner);
+                MessageUtil.send(player, "world.command.template.suffix", stringJoiner);
                 return true;
             }
 
             if (args[0].equalsIgnoreCase("list")) {
 
                 if (PermissionChecker.notHasPermission(player, "swm.command.list")) {
-                    player.sendMessage(SpaceWorldManager.NO_PERMISSION);
+                    MessageUtil.send(player, "messages.noPermissions");
                     return true;
                 }
 
@@ -119,14 +120,14 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
             if (args[0].equalsIgnoreCase("info")) {
 
                 if (PermissionChecker.notHasPermission(player, "swm.command.info")) {
-                    player.sendMessage(SpaceWorldManager.NO_PERMISSION);
+                    MessageUtil.send(player, "messages.noPermissions");
                     return true;
                 }
 
                 World world = player.getWorld();
-                player.sendMessage(SpaceWorldManager.PREFIX + "You are in the world: §f" + world.getName());
+                MessageUtil.send(player, "world.command.info", world.getName());
                 if (worldUtils.isWorldLocked(worldUtils.getWorldFolder(world.getName())))
-                    player.sendMessage(SpaceWorldManager.PREFIX + "This world is §clocked§7.");
+                    MessageUtil.send(player, "world.command.lock");
 
                 return true;
             }
@@ -134,7 +135,7 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
         } else if (args.length == 2 && args[0].equalsIgnoreCase("list")) {
 
             if (PermissionChecker.notHasPermission(player, "swm.command.list")) {
-                player.sendMessage(SpaceWorldManager.NO_PERMISSION);
+                MessageUtil.send(player, "messages.noPermissions");
                 return true;
             }
 
@@ -143,7 +144,7 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
             try {
                 pageNumber = Integer.parseInt(args[1]);
             } catch (NumberFormatException e) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "Please enter a integer!");
+                MessageUtil.send(player, "messages.needInteger");
                 return true;
             }
 
@@ -158,14 +159,14 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
         } else if ((args.length == 2 || args.length == 3) && args[0].equalsIgnoreCase("join")) {
 
             if (PermissionChecker.notHasPermission(player, "swm.command.join")) {
-                player.sendMessage(SpaceWorldManager.NO_PERMISSION);
+                MessageUtil.send(player, "messages.noPermissions");
                 return true;
             }
 
             final String worldName = args[1];
 
             if (!worldUtils.isWorldLoaded(worldName)) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "This world doesn't exist.");
+                MessageUtil.send(player, "world.command.create.isExist");
                 return true;
             }
 
@@ -179,14 +180,14 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
         } else if ((args.length == 2 || args.length == 3) && args[0].equalsIgnoreCase("delete")) {
 
             if (PermissionChecker.notHasPermission(player, "swm.command.delete")) {
-                player.sendMessage(SpaceWorldManager.NO_PERMISSION);
+                MessageUtil.send(player, "messages.noPermissions");
                 return true;
             }
 
             final String worldName = args[1];
 
             if (!worldUtils.isWorldLoaded(worldName)) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "This world doesn't exist.");
+                MessageUtil.send(player, "world.command.create.isExist");
                 return true;
             }
 
@@ -194,13 +195,13 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
             World mainWorld = worldUtils.getMinecraftMainWorld().get();
 
             if (mainWorld.getName().equalsIgnoreCase(worldName)) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "You can't delete the main world ingame.");
+                MessageUtil.send(player, "world.command.delete.mainWorld");
                 return true;
             }
 
             if (worldUtils.worldDeleteConfirmation.getIfPresent(player.getUniqueId()) == null) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "Are you sure that you want delete the world §f" + worldName + "§7?");
-                player.sendMessage(SpaceWorldManager.PREFIX + "If your decision is made, type this command again. (lasts §f60 §7seconds)");
+                MessageUtil.send(player, "world.command.delete.confirm", worldName);
+                MessageUtil.send(player, "world.command.delete.confirm.suffix");
                 worldUtils.worldDeleteConfirmation.put(player.getUniqueId(), true);
                 return true;
             }
@@ -224,27 +225,27 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
                     }
                 }
 
-                player.sendMessage(SpaceWorldManager.PREFIX + "World §f" + worldName + " §7was unloaded.");
-                player.sendMessage(SpaceWorldManager.PREFIX + "World §f" + worldName + " §7was deleted. Storage file was also destroyed.");
+                MessageUtil.send(player, "world.command.unload.successful", worldName);
+                MessageUtil.send(player, "world.command.unload.successful.suffix", worldName);
                 worldUtils.worldDeleteConfirmation.invalidate(player.getUniqueId());
             });
 
         } else if ((args.length == 2 || args.length == 3) && args[0].equalsIgnoreCase("import")) {
 
             if (PermissionChecker.notHasPermission(player, "swm.command.import")) {
-                player.sendMessage(SpaceWorldManager.NO_PERMISSION);
+                MessageUtil.send(player, "messages.noPermissions");
                 return true;
             }
 
             String worldName = args[1];
 
             if (Bukkit.getWorld(worldName) != null) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "This world is already imported and loaded.");
+                MessageUtil.send(player, "world.command.import.isAlreadyLoaded");
                 return true;
             }
 
             if (!worldUtils.isWorldFolderExisting(worldName)) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "There is no world folder existing with that name.");
+                MessageUtil.send(player, "world.command.import.isNoWorldFolder");
                 return true;
             }
 
@@ -262,24 +263,24 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
             if (!worldUtils.hasWorldSettings(worldName))
                 worldUtils.createSettingsForWorld(player, worldName);
 
-            player.sendMessage(SpaceWorldManager.PREFIX + "World §f" + worldName + " §7was successfully imported.");
+            MessageUtil.send(player, "world.command.import.successful", worldName);
 
         } else if ((args.length == 2 || args.length == 3) && args[0].equalsIgnoreCase("lock")) {
 
             if (PermissionChecker.notHasPermission(player, "swm.command.lock")) {
-                player.sendMessage(SpaceWorldManager.NO_PERMISSION);
+                MessageUtil.send(player, "messages.noPermissions");
                 return true;
             }
 
             String worldName = args[1];
 
             if (!worldUtils.isWorldLoaded(worldName)) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "This world doesn't exist.");
+                MessageUtil.send(player, "world.command.create.isExist");
                 return true;
             }
 
             if (worldUtils.isWorldLocked(worldUtils.getWorldFolder(worldName))) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "This world is already locked.");
+                MessageUtil.send(player, "world.command.lock.isLocked");
                 return true;
             }
 
@@ -295,19 +296,19 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
         } else if ((args.length == 2 || args.length == 3) && args[0].equalsIgnoreCase("unlock")) {
 
             if (PermissionChecker.notHasPermission(player, "swm.command.unlock")) {
-                player.sendMessage(SpaceWorldManager.NO_PERMISSION);
+                MessageUtil.send(player, "messages.noPermissions");
                 return true;
             }
 
             String worldName = args[1];
 
             if (!worldUtils.isWorldLoaded(worldName)) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "This world doesn't exist.");
+                MessageUtil.send(player, "world.command.create.isExist");
                 return true;
             }
 
             if (!worldUtils.isWorldLocked(worldUtils.getWorldFolder(worldName))) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "This world is not locked.");
+                MessageUtil.send(player, "world.command.unlock.isNotLocked");
                 return true;
             }
 
@@ -318,13 +319,13 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
                     e.printStackTrace();
                 }
 
-                player.sendMessage(SpaceWorldManager.PREFIX + "Password from world §f" + worldName + " §7was removed.");
+                MessageUtil.send(player, "world.command.unlock.successful", worldName);
             });
 
         } else if ((args.length == 3 || args.length == 4) && args[0].equalsIgnoreCase("create")) {
 
             if (PermissionChecker.notHasPermission(player, "swm.command.create")) {
-                player.sendMessage(SpaceWorldManager.NO_PERMISSION);
+                MessageUtil.send(player, "messages.noPermissions");
                 return true;
             }
 
@@ -338,20 +339,20 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
                 newWorld = worldUtils.createWorld(player, worldName, args[2].toUpperCase(), true, args[3]);
 
             if (args.length == 3)
-                newWorld.ifPresent(world -> player.spigot().sendMessage(makeComponent(newWorld.get())));
+                newWorld.ifPresent(world -> player.spigot().sendMessage(makeComponent(newWorld.get(), player)));
 
         } else if (args.length == 3) {
             Player target = Bukkit.getPlayer(args[1]);
 
             if (target == null) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "This player is currently offline!");
+                MessageUtil.send(player, "messages.playerOffline");
                 return true;
             }
 
             String worldName = args[2];
 
             if (!worldUtils.isWorldLoaded(worldName)) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "This world doesn't exist.");
+                MessageUtil.send(player, "world.command.create.isExist");
                 return true;
             }
 
@@ -360,39 +361,38 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
             if (trustMode.equalsIgnoreCase("trust")) {
 
                 if (PermissionChecker.notHasPermission(player, "swm.command.trust")) {
-                    player.sendMessage(SpaceWorldManager.NO_PERMISSION);
+                    MessageUtil.send(player, "messages.noPermissions");
                     return true;
                 }
 
                 WorldSettings worldSettings = worldSettingsFileManager.getWorldSettings(worldName);
 
                 if (worldSettings.getTrustedBuilders().contains(target.getUniqueId().toString())) {
-                    player.sendMessage(SpaceWorldManager.PREFIX + "This player is already trusted.");
+                    MessageUtil.send(player, "world.command.already.trust");
                     return true;
                 }
 
                 worldSettings.getTrustedBuilders().add(target.getUniqueId().toString());
                 worldSettingsFileManager.updateSettingsForWorld(worldName, worldSettings);
-                player.sendMessage(SpaceWorldManager.PREFIX + "Player §f" + target.getName() + " §7was trusted for world §f" + worldName + "§7.");
+                MessageUtil.send(player, "world.command.trust.player", player.getName(), worldName);
 
             } else if (trustMode.equalsIgnoreCase("untrust")) {
 
                 if (PermissionChecker.notHasPermission(player, "swm.command.untrust")) {
-                    player.sendMessage(SpaceWorldManager.NO_PERMISSION);
+                    MessageUtil.send(player, "messages.noPermissions");
                     return true;
                 }
 
                 WorldSettings worldSettings = worldSettingsFileManager.getWorldSettings(worldName);
 
                 if (!worldSettings.getTrustedBuilders().contains(target.getUniqueId().toString())) {
-                    player.sendMessage(SpaceWorldManager.PREFIX + "This player is not trusted.");
+                    MessageUtil.send(player, "world.command.player.isnotrusted");
                     return true;
                 }
 
                 worldSettings.getTrustedBuilders().remove(target.getUniqueId().toString());
                 worldSettingsFileManager.updateSettingsForWorld(worldName, worldSettings);
-                player.sendMessage(SpaceWorldManager.PREFIX + "Player §f" + target.getName() + " §7was untrusted for world §f" + worldName + "§7.");
-
+                MessageUtil.send(player, "world.command.untrust.player", target.getName(), worldName);
             }
 
         } else {
@@ -420,7 +420,7 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
         }
 
         if (args.length == 2) {
-            player.sendMessage(SpaceWorldManager.PREFIX + "Permission denied! Please use the correct password to proceed.");
+            MessageUtil.send(player, "messages.denied.join");
             return;
         }
 
@@ -430,12 +430,13 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
             String possiblePassword = SpaceWorldManager.getInstance().getHashingManager().createHashedPassword(args[2], salt);
 
             if (!possiblePassword.equalsIgnoreCase(passwordFromWorld.getHashedPassword())) {
-                player.sendMessage(SpaceWorldManager.PREFIX + "Wrong password. Entry denied.");
+                MessageUtil.send(player, "messages.denied.password");
             } else {
-                player.sendMessage(SpaceWorldManager.PREFIX + "Access granted!");
+                MessageUtil.send(player, "messages.successful.password");
                 response.accept(null);
             }
         }
+
     }
 
     private void sendUsage(Player player) {
@@ -460,7 +461,7 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, @NotNull String[] args) {
         if (args.length == 1)
-            return Arrays.asList("create", "delete", "import", "join", "lock", "unlock", "templates", "list", "info", "gui");
+            return Arrays.asList("create", "delete", "import", "join", "lock", "unlock", "templates", "list", "info", "gui", "item");
 
         if (args.length == 2 && (args[0].equalsIgnoreCase("join")) || args[0].equalsIgnoreCase("delete")
                 || args[0].equalsIgnoreCase("lock") || args[0].equalsIgnoreCase("unlock"))
@@ -475,18 +476,24 @@ public class WorldCommand implements CommandExecutor, TabCompleter {
         return Collections.emptyList();
     }
 
-    private TextComponent makeComponent(World newWorld) {
+    private TextComponent makeComponent(World newWorld, Player player) {
+        final Optional<Message> optionalMessage = MessageUtil.get("world.join.click.message.prefix");
+        final Optional<Message> optionalMessageBody = MessageUtil.get("world.join.click.message.body");
+        final Optional<Message> optionalMessageSuffix = MessageUtil.get("world.join.click.message.suffix");
+
         TextComponent mainComponent = new TextComponent();
-        mainComponent.setText(SpaceWorldManager.PREFIX + "Click ");
+        mainComponent.setText(optionalMessage.isEmpty() ? "§7Click " : optionalMessage.get().getText());
 
         TextComponent firstSubComponent = new TextComponent();
-        firstSubComponent.setText("§f§lHERE ");
+        firstSubComponent.setText(optionalMessageBody.isEmpty() ? "§f§lHERE " : optionalMessageBody.get().getText());
         firstSubComponent.setClickEvent(new ClickEvent(ClickEvent.Action.RUN_COMMAND, "/swm join " + newWorld.getName()));
         mainComponent.addExtra(firstSubComponent);
 
         TextComponent secondSubComponent = new TextComponent();
-        secondSubComponent.setText("§7to teleport yourself to the new world.");
+        secondSubComponent.setText(optionalMessageSuffix.isEmpty() ? "§7to teleport yourself to the new world." : optionalMessageSuffix.get().getText());
         mainComponent.addExtra(secondSubComponent);
+
         return mainComponent;
     }
+
 }

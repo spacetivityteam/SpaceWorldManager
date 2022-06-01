@@ -41,7 +41,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 public final class SpaceWorldManager extends JavaPlugin {
 
     public static final String PREFIX = "§3NWM §7| ";
-    public static final String NO_PERMISSION = PREFIX + "§cYou are not permitted to execute this action.";
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     public static final List<ItemBuilder> INTERACTIVE_ITEMS = new CopyOnWriteArrayList<>();
 
