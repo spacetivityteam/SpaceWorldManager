@@ -6,6 +6,8 @@ import net.spacetivity.world.message.MessageUtil;
 import net.spacetivity.world.scoreboard.PlayerWorldScoreboard;
 import net.spacetivity.world.scoreboardapi.Sidebar;
 import net.spacetivity.world.settings.WorldSettingsFileManager;
+import net.spacetivity.world.settings.WorldState;
+import net.spacetivity.world.utils.WorldUtils;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -70,8 +72,10 @@ public record WorldProtectionListener(WorldSettingsFileManager worldSettingsFile
             return;
         }
 
-        if (SpaceWorldManager.getInstance().getWorldUtils().hasWorldSettings(worldName))
-            event.setCancelled(SpaceWorldManager.getInstance().getWorldUtils().canBuild(player.getUniqueId(), player.getWorld().getName()));
+        WorldUtils worldUtils = SpaceWorldManager.getInstance().getWorldUtils();
+        if (worldUtils.hasWorldSettings(worldName))
+            event.setCancelled(worldUtils.getState(worldName).equals(WorldState.FINISHED) &&
+                    worldUtils.canBuild(player.getUniqueId(), player.getWorld().getName()));
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
@@ -84,8 +88,10 @@ public record WorldProtectionListener(WorldSettingsFileManager worldSettingsFile
             return;
         }
 
-        if (SpaceWorldManager.getInstance().getWorldUtils().hasWorldSettings(worldName))
-            event.setCancelled(SpaceWorldManager.getInstance().getWorldUtils().canBuild(player.getUniqueId(), player.getWorld().getName()));
+        WorldUtils worldUtils = SpaceWorldManager.getInstance().getWorldUtils();
+        if (worldUtils.hasWorldSettings(worldName))
+            event.setCancelled(worldUtils.getState(worldName).equals(WorldState.FINISHED) &&
+                    worldUtils.canBuild(player.getUniqueId(), player.getWorld().getName()));
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
