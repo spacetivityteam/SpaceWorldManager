@@ -30,7 +30,7 @@ public record WorldProtectionListener(WorldSettingsFileManager worldSettingsFile
         ConfigurationData config = SpaceWorldManager.getInstance().getConfigurationFileManager().getConfig();
         ItemStack worldItem = SpaceWorldManager.getInstance().giveWorldItem(player);
 
-        if (config.isGiveWorldItemOnJoin() && !player.getInventory().contains(worldItem.getType()))
+        if (config.isGiveWorldItemOnJoin() && !player.getInventory().contains(worldItem.getType()) && player.hasPermission("swm.item"))
             player.getInventory().addItem(worldItem);
 
         if (config.isShowScoreboard()) {

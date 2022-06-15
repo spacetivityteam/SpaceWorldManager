@@ -40,7 +40,7 @@ import java.util.concurrent.CopyOnWriteArrayList;
 @Getter
 public final class SpaceWorldManager extends JavaPlugin {
 
-    public static final String PREFIX = "§3NWM §7| ";
+    public static final String PREFIX = "§3SWM §7| ";
     public static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
     public static final List<ItemBuilder> INTERACTIVE_ITEMS = new CopyOnWriteArrayList<>();
 
@@ -114,8 +114,7 @@ public final class SpaceWorldManager extends JavaPlugin {
                 .onInteract(event -> {
                     if (PermissionChecker.hasPermission(player, "swm.command.gui"))
                         WorldInventory.getInventory(player).open(player);
-                })
-                .build();
+                }).build();
     }
 
     private void startWorldLoadingProcesses() {
