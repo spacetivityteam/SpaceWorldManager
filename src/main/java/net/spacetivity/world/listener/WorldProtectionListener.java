@@ -24,7 +24,7 @@ import org.bukkit.inventory.ItemStack;
 
 public record WorldProtectionListener(WorldSettingsFileManager worldSettingsFileManager) implements Listener {
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onJoin(PlayerJoinEvent event) {
         Player player = event.getPlayer();
         ConfigurationData config = SpaceWorldManager.getInstance().getConfigurationFileManager().getConfig();
